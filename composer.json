@@ -4,8 +4,8 @@
 	"type": "craft-plugin",
 	"keywords": ["craft", "cms", "craftcms", "craft-plugin", "email subscriptions"],
 	"support": {
-		"docs": "https://github.com/KuriousAgency/email-subscriptions/blob/master/README.md",
-		"issues": "https://github.com/KuriousAgency/email-subscriptions/issues"
+		"docs": "https://github.com/kuriousagency/email-subscriptions/blob/master/README.md",
+		"issues": "https://github.com/kuriousagency/email-subscriptions/issues"
 	},
 	"license": "MIT",
 	"authors": [
@@ -27,7 +27,7 @@
 		"handle": "email-subscriptions",
 		"hasCpSettings": true,
 		"hasCpSection": false,
-		"changelogUrl": "https://raw.githubusercontent.com/KuriousAgency/email-subscriptions/master/CHANGELOG.md",
+		"changelogUrl": "https://raw.githubusercontent.com/kuriousagency/email-subscriptions/master/CHANGELOG.md",
 		"components": {
 			"emailSubscriptionsService": "kuriousagency\\emailsubscriptions\\services\\EmailSubscriptionsService"
 		},
