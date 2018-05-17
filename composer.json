@@ -3,7 +3,6 @@
 	"description":
 		"Allows subscribing and unsubscribing from 3rd party email lists.",
 	"type": "craft-plugin",
-	"version": "0.0.2",
 	"keywords": [
 		"craft",
 		"cms",
