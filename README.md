@@ -22,20 +22,63 @@ To install the plugin, follow these instructions.
 
 ## Email Subscriptions Overview
 
--Insert text here-
+This is a simple plugin that allows a user to manage their email list subscriptions on a 3rd party service like MailChimp for example.
+
+They can subscribe and unsubscribe from any of the lists within your 3rd party service account.
+
+Currently the only supported service is MailChimp.
 
 ## Configuring Email Subscriptions
 
--Insert text here-
+Within the plugin settings, choose a 3rd party service and enter the API key.
 
-## Using Email Subscriptions
+## Example Form
 
--Insert text here-
+```twig
+<form method="post" accept-charset="UTF-8">
+
+	{{ csrfInput() }}
+	<input type="hidden" name="action" value="email-subscriptions/update">
+
+	{% for list in craft.emailSubscriptions.lists %}
+		<input type="checkbox" id="list_{{ list.id }}" name="lists[]" value="{{ list.id }}">
+		<label for="list_{{ list.id }}">{{ list.name }}</label>
+	{% endfor %}
+
+	<button type="submit">Update</submit>
+
+</form>
+```
+
+## Variables
+
+You can get the lists that an email is subscribed to via:
+
+```twig
+craft.emailSubscriptions.getListsByEmail('name@email.com')
+```
+
+if you do not pass in an email address then it will use the current user's email.
+
+```twig
+craft.emailSubscriptions.listsByEmail
+```
+
+## Flash Messages
+
+Two messages can set by the plugin:
+
+```
+{% set success = craft.session.getFlash('notice') %}
+
+{% set error = craft.session.getFlash('error') %}
+```
 
 ## Email Subscriptions Roadmap
 
 Some things to do, and ideas for potential features:
 
-*   Release it
+*   Support other 3rd party services.
+*   update subscriptions on saveUser event.
 
 Brought to you by [Kurious Agency](https://kurious.agency)
