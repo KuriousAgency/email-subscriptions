@@ -2,7 +2,14 @@
 	"name": "kuriousagency/email-subscriptions",
 	"description": "Allows subscribing and unsubscribing from 3rd party email lists.",
 	"type": "craft-plugin",
-	"keywords": ["craft", "cms", "craftcms", "craft-plugin", "email subscriptions"],
+	"version": "1.1.0",
+	"keywords": [
+		"craft",
+		"cms",
+		"craftcms",
+		"craft-plugin",
+		"email subscriptions"
+	],
 	"support": {
 		"docs": "https://github.com/kuriousagency/email-subscriptions/blob/master/README.md",
 		"issues": "https://github.com/kuriousagency/email-subscriptions/issues"
@@ -29,7 +36,7 @@
 		"hasCpSection": false,
 		"changelogUrl": "https://raw.githubusercontent.com/kuriousagency/email-subscriptions/master/CHANGELOG.md",
 		"components": {
-			"emailSubscriptionsService": "kuriousagency\\emailsubscriptions\\services\\EmailSubscriptionsService"
+			"service": "kuriousagency\\emailsubscriptions\\services\\EmailSubscriptionsService"
 		},
 		"class": "kuriousagency\\emailsubscriptions\\EmailSubscriptions"
 	}

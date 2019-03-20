@@ -30,7 +30,7 @@ class EmailSubscriptionsVariable
      */
     public function lists()
     {
-        return EmailSubscriptions::$plugin->emailSubscriptionsService->getLists();
+        return EmailSubscriptions::$plugin->service->getLists();
 	}
 	
 	public function getListsByEmail($email=null)
@@ -40,6 +40,6 @@ class EmailSubscriptionsVariable
 		}
 		//Craft::dd($email);
 		
-		return EmailSubscriptions::$plugin->emailSubscriptionsService->getListsByEmail($email);
+		return EmailSubscriptions::$plugin->service->getListsByEmail($email);
 	}
 }

@@ -20,7 +20,7 @@ use craft\base\Component;
  * @package   EmailSubscriptions
  * @since     0.0.1
  */
-class MailChimp extends Component
+class HubSpot extends Component
 {
     // Public Methods
     // =========================================================================
@@ -33,10 +33,12 @@ class MailChimp extends Component
 		$results = [];
 		foreach ($this->request('GET', 'lists')['body']['lists'] as $list)
 		{
-			$results[] = [
-				'id' => $list['id'],
-				'name' => $list['name'],
-			];
+			if (!$list['dynamic']) {
+				$results[] = [
+					'id' => $list['listId'],
+					'name' => $list['name'],
+				];
+			}
 		}
 		return $results;
 	}
@@ -44,26 +46,39 @@ class MailChimp extends Component
 	public function getListsByEmail($email)
 	{
 		$results = [];
-		foreach ($this->request('GET', 'lists', ['email'=>$email])['body']['lists'] as $list)
-		{
-			$results[] = [
-				'id' => $list['id'],
-				'name' => $list['name'],
-			];
+		//$email = 'testingapis@hubspot.com';
+		
+		$contact = $this->request('GET', 'contact/email/'.$email.'/profile')['body'];
+		if (isset($contact['status']) && $contact['status'] == 'error') {
+			return [];
 		}
-		return $results;
+		//Craft::dd($contact);
+		$ids = [];
+		foreach ($contact['list-memberships'] as $list)
+		{
+			$ids[] = $list['static-list-id'];
+		}
+		
+		$lists = $this->getLists();
+
+		foreach($lists as $key => $list)
+		{
+			if (!in_array($list['id'], $ids)) {
+				unset($lists[$key]);
+			}
+		}
+
+		return $lists;
 	}
 
 	public function subscribe($listId, $email)
 	{
+		//$email = 'testingapis@hubspot.com';
 		$params = [
-			'email_address' => $email,
-			'status' => 'subscribed',
+			'emails' => [$email],
 		];
 
-		$hash = md5($email);
-
-		$response = $this->request('PUT', "lists/$listId/members/$hash", $params);
+		$response = $this->request('POST', "lists/$listId/add", $params);
 
 		if ($response['success'] and $response['statusCode'] === 200) {
 			return ['status' => 'success'];
@@ -76,14 +91,16 @@ class MailChimp extends Component
 
 	public function unsubscribe($listId, $email)
 	{
+		$contact = $this->request('GET', 'contact/email/'.$email.'/profile')['body'];
+		if (isset($contact['status']) && $contact['status'] == 'error') {
+			return ['status' => 'success'];
+		}
+		
 		$params = [
-			'email_address' => $email,
-			'status' => 'unsubscribed',
+			'vids' => [$contact['vid']],
 		];
 
-		$hash = md5($email);
-
-		$response = $this->request('PUT', "lists/$listId/members/$hash", $params);
+		$response = $this->request('POST', "lists/$listId/remove/", $params);
 
 		if ($response['success'] and $response['statusCode'] === 200) {
 			return ['status' => 'success'];
@@ -94,19 +111,16 @@ class MailChimp extends Component
 		}
 	}
 
-	private function request($type = 'GET', $uri = '', $params = null)
+	private function request($type = 'GET', $uri = '', $params = [])
     {
         $settings = EmailSubscriptions::$plugin->getSettings();
 
-        // Get datacenter from end of api key
-        $explode = explode('-', $settings->apiKey);
-        $dc = end($explode);
+        $params['hapikey'] = $settings->apiKey;
 
         $client = new \GuzzleHttp\Client([
-          'base_uri' => 'https://'.$dc.'.api.mailchimp.com/3.0/',
+          'base_uri' => 'https://api.hubapi.com/contacts/v1/',
           'http_errors' => false,
           'timeout' => 10,
-          'auth' => ['plugin', $settings->apiKey]
         ]);
 
         try {
@@ -117,6 +131,7 @@ class MailChimp extends Component
 				]);
 			}else{
 				$response = $client->request($type, $uri, [
+					'query' => ['hapikey' => $settings->apiKey],
 					'json' => $params
 				]);
 			}

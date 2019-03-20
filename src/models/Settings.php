@@ -32,10 +32,6 @@ class Settings extends Model
 	public $apiKey = null;
 	//public $terms = null;
 
-	public $services = [
-		'MailChimp' => 'MailChimp',
-	];
-
     // Public Methods
     // =========================================================================
 
