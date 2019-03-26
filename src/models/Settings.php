@@ -33,7 +33,12 @@ class Settings extends Model
 	//public $terms = null;
 
     // Public Methods
-    // =========================================================================
+	// =========================================================================
+	
+	public function getServices()
+	{
+		return EmailSubscriptions::$plugin->services;
+	}
 
     /**
      * @inheritdoc
