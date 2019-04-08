@@ -32,20 +32,24 @@ class HubSpot extends Component
 	{
 		$results = [];
 		$data = $this->request('GET', 'lists', ['offset'=>$offset])['body'];
-		foreach ($data['lists'] as $list)
-		{
-			if (!$list['dynamic']) {
-				$results[] = [
-					'id' => $list['listId'],
-					'name' => $list['name'],
-				];
+
+		if( (is_array($data)) && (array_key_exists('lists',$data)) ) {
+			foreach ($data['lists'] as $list)
+			{
+				if (!$list['dynamic']) {
+					$results[] = [
+						'id' => $list['listId'],
+						'name' => $list['name'],
+					];
+				}
 			}
-		}
-		if ($data['has-more']) {
-			if ($data['offset'] < 21) {
-				$results = array_merge($results, $this->getLists($data['offset']));
+			if ($data['has-more']) {
+				if ($data['offset'] < 21) {
+					$results = array_merge($results, $this->getLists($data['offset']));
+				}
 			}
-		}
+		}	
+		
 		return $results;
 	}
 

@@ -30,6 +30,7 @@ class Settings extends Model
      */
 	public $service = null;
 	public $apiKey = null;
+	public $defaultListId = null;
 	//public $terms = null;
 
     // Public Methods

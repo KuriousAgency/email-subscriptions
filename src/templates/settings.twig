@@ -39,6 +39,23 @@
     value:        settings.apiKey,
 }) }}
 
+{% set lists = [] %}
+
+{% for list in craft.emailSubscriptions.lists %}
+	{% set lists = lists|merge({('_'~list.id): (list.name)}) %}
+{% endfor %}
+
+{% if lists|length > 1 %}
+	{{ forms.selectField({
+		label: 'Default List',
+		instructions: 'Please select your default list',
+		id: 'defaultListId',
+		name: 'defaultListId',
+		value: settings.defaultListId,
+		options: lists
+	}) }}
+{% endif %}
+
 {# {{ forms.elementSelectField({
     label: 'Terms',
     instructions: 'Please choose your terms',
