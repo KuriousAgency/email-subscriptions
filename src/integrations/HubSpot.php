@@ -84,6 +84,15 @@ class HubSpot extends Component
 	public function subscribe($listId, $email)
 	{
 		//$email = 'testingapis@hubspot.com';
+
+		// create contact first, 409 response if contact exists
+		$response = $this->request('POST', "contact", [
+			'properties' => [
+				["property" => "email", "value" => $email],
+			]
+		]);
+		
+
 		$params = [
 			'emails' => [$email],
 		];
