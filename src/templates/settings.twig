@@ -41,7 +41,7 @@
 
 {% set lists = [] %}
 
-{% for list in craft.emailSubscriptions.lists %}
+{% for list in craft.emailSubscriptions.lists(true) %}
 	{% set lists = lists|merge({('_'~list.id): (list.name)}) %}
 {% endfor %}
 
@@ -52,6 +52,17 @@
 		id: 'defaultListId',
 		name: 'defaultListId',
 		value: settings.defaultListId,
+		options: lists
+	}) }}
+{% endif %}
+
+{% if lists|length > 1 %}
+	{{ forms.checkBoxGroupField({
+		label: 'Front End Visible Lists',
+		instructions: 'Please select lists that can be seen in Frontend Templates',
+		id: 'selectedSubLists',
+		name: 'selectedSubLists',
+		values: settings.selectedSubLists,
 		options: lists
 	}) }}
 {% endif %}

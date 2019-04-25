@@ -73,9 +73,30 @@ class EmailSubscriptionsService extends Component
     /*
      * @return mixed
      */
-	public function getLists()
+	public function getLists($showAll=false)
 	{
-		return $this->service->getLists();
+		$toShow = [];
+		$settings = EmailSubscriptions::$plugin->getSettings();
+		$selectedSubLists = str_replace( '_', '',$settings->selectedSubLists);
+		$email = Craft::$app->getUser()->getIdentity()->email;
+		if ($showAll) {
+			return $this->service->getLists();
+		} elseif (empty($selectedSubLists)) {
+			return;
+		} else {
+			foreach ($this->service->getLists() as $list) {
+				if (in_array($list['id'],$selectedSubLists)) {
+					$toShow[] = $list;
+				} 
+			};
+			foreach ($this->getListsByEmail($email) as $list) {
+				if (!in_array($list['id'],$selectedSubLists)) {
+					$toShow[] = $list;
+				} 
+			};
+			return $toShow;
+		}
+		
 	}
 
 	public function getListsByEmail($email)
