@@ -28,9 +28,9 @@ class EmailSubscriptionsVariable
      * @param null $optional
      * @return string
      */
-    public function lists()
+    public function lists($showAll=false)
     {
-        return EmailSubscriptions::$plugin->service->getLists();
+        return EmailSubscriptions::$plugin->service->getLists($showAll);
 	}
 	
 	public function getListsByEmail($email=null)
