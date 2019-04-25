@@ -37,6 +37,39 @@ class EmailSubscriptionsService extends Component
 		$this->service = new $className();
 	}
 
+	public function update($email, $ids)
+	{
+		$availableLists = $this->getLists();
+		$availableListsIds = [];
+		foreach($availableLists as $list)
+		{
+			$availableListsIds[] = $list['id'];
+		}
+
+		$responses = [];
+
+		foreach($availableListsIds as $id)
+		{
+			if(in_array($id, $ids)){
+				$responses[] = $this->subscribe($id, $email);
+			}else{
+				$responses[] = $this->unsubscribe($id, $email);
+			}
+		}
+
+		$success = true;
+
+		foreach($responses as $response)
+		{
+			if($response['status'] == 'error'){
+				Craft::$app->getSession()->setError($response['message']);
+				$success = false;
+			}
+		}
+
+		return $success;
+	}
+
     /*
      * @return mixed
      */

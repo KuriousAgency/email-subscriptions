@@ -30,14 +30,16 @@ class Settings extends Model
      */
 	public $service = null;
 	public $apiKey = null;
+	public $defaultListId = null;
 	//public $terms = null;
 
-	public $services = [
-		'MailChimp' => 'MailChimp',
-	];
-
     // Public Methods
-    // =========================================================================
+	// =========================================================================
+	
+	public function getServices()
+	{
+		return EmailSubscriptions::$plugin->services;
+	}
 
     /**
      * @inheritdoc

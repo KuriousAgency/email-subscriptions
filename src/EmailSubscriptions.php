@@ -21,6 +21,7 @@ use craft\events\PluginEvent;
 use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
 use craft\events\RegisterUrlRulesEvent;
+use craft\elements\User;
 
 use yii\base\Event;
 
@@ -49,7 +50,12 @@ class EmailSubscriptions extends Plugin
     /**
      * @var string
      */
-    public $schemaVersion = '0.0.1';
+	public $schemaVersion = '0.0.1';
+	
+	public $services = [
+		'MailChimp' => 'MailChimp',
+		'HubSpot' => 'HubSpot',
+	];
 
     // Public Methods
     // =========================================================================
@@ -62,21 +68,16 @@ class EmailSubscriptions extends Plugin
         parent::init();
         self::$plugin = $this;
 
-        Event::on(
-            UrlManager::class,
-            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
-                $event->rules['siteActionTrigger1'] = 'email-subscriptions/default';
-            }
-        );
 
-        // Event::on(
-        //     UrlManager::class,
-        //     UrlManager::EVENT_REGISTER_CP_URL_RULES,
-        //     function (RegisterUrlRulesEvent $event) {
-        //         $event->rules['cpActionTrigger1'] = 'email-subscriptions/default/do-something';
-        //     }
-        // );
+		
+		Event::on(User::class, User::EVENT_AFTER_SAVE, function(Event $e){
+			$user = $e->sender;
+			$lists = Craft::$app->getRequest()->getParam('lists', []);
+			
+			if (count($lists)) {
+				$this->service->update($user->email, $lists);
+			}
+		});
 
         Event::on(
             CraftVariable::class,
@@ -130,7 +131,8 @@ class EmailSubscriptions extends Plugin
         return Craft::$app->view->renderTemplate(
             'email-subscriptions/settings',
             [
-                'settings' => $this->getSettings(),
+				'settings' => $this->getSettings(),
+				'services' => $this->services,
             ]
         );
     }
