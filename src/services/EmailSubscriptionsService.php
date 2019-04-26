@@ -94,8 +94,8 @@ class EmailSubscriptionsService extends Component
 					$toShow[] = $list;
 				} 
 			};
-			if ($user = Craft::$app->getUser()) {
-				foreach ($this->getListsByEmail($user->getIdentity()->email) as $list) {
+			if ($user = Craft::$app->getUser()->getIdentity()) {
+				foreach ($this->getListsByEmail($user->email) as $list) {
 					if (!in_array($list['id'],$selectedSubLists)) {
 						$toShow[] = $list;
 					} 
