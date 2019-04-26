@@ -83,7 +83,7 @@ class EmailSubscriptionsService extends Component
 		$toShow = [];
 		$settings = EmailSubscriptions::$plugin->getSettings();
 		$selectedSubLists = str_replace( '_', '',$settings->selectedSubLists);
-		$email = Craft::$app->getUser()->getIdentity()->email;
+		
 		if ($showAll) {
 			return $this->service->getLists();
 		} elseif (empty($selectedSubLists)) {
@@ -94,11 +94,13 @@ class EmailSubscriptionsService extends Component
 					$toShow[] = $list;
 				} 
 			};
-			foreach ($this->getListsByEmail($email) as $list) {
-				if (!in_array($list['id'],$selectedSubLists)) {
-					$toShow[] = $list;
-				} 
-			};
+			if ($user = Craft::$app->getUser()) {
+				foreach ($this->getListsByEmail($user->getIdentity()->email) as $list) {
+					if (!in_array($list['id'],$selectedSubLists)) {
+						$toShow[] = $list;
+					} 
+				};
+			}
 			return $toShow;
 		}
 		
