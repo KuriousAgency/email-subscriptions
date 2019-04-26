@@ -34,7 +34,9 @@ class EmailSubscriptionsService extends Component
 
 		$settings = EmailSubscriptions::$plugin->getSettings();
 		$className = "kuriousagency\\emailsubscriptions\\integrations\\".$settings->service;
-		$this->service = new $className();
+		if ($settings->service) {
+			$this->service = new $className();
+		}
 	}
 
 	public function update($email, $ids)
@@ -75,6 +77,9 @@ class EmailSubscriptionsService extends Component
      */
 	public function getLists($showAll=false)
 	{
+		if (!$this->service) {
+			return [];
+		}
 		$toShow = [];
 		$settings = EmailSubscriptions::$plugin->getSettings();
 		$selectedSubLists = str_replace( '_', '',$settings->selectedSubLists);
