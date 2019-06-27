@@ -108,6 +108,9 @@ class EmailSubscriptionsService extends Component
 
 	public function getListsByEmail($email)
 	{
+		if (!$this->service) {
+			return [];
+		}
 		return $this->service->getListsByEmail($email);
 	}
 
