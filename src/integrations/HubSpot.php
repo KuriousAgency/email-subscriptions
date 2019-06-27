@@ -31,7 +31,7 @@ class HubSpot extends Component
 	public function getLists($offset=0)
 	{
 		$results = [];
-		$data = $this->request('GET', 'lists', ['offset'=>$offset])['body'];
+		$data = $this->request('GET', 'lists', ['offset'=>$offset,'count'=>100])['body'];
 
 		if( (is_array($data)) && (array_key_exists('lists',$data)) ) {
 			foreach ($data['lists'] as $list)
