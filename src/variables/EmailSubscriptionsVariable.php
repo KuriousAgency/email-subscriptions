@@ -42,4 +42,9 @@ class EmailSubscriptionsVariable
 		
 		return EmailSubscriptions::$plugin->service->getListsByEmail($email);
 	}
+
+	public function service()
+	{
+		return EmailSubscriptions::$plugin->service->service;
+	}
 }
