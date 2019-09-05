@@ -55,6 +55,7 @@ class EmailSubscriptions extends Plugin
 	public $services = [
 		'MailChimp' => 'MailChimp',
 		'HubSpot' => 'HubSpot',
+		'Klaviyo' => 'Klaviyo',
 	];
 
     // Public Methods
