@@ -39,6 +39,15 @@
     value:        settings.apiKey,
 }) }}
 
+{{ forms.textField({
+    label:        'Account ID',
+    instructions: 'ActiveCampaign Only',
+    id:           'accountId',
+    name:         'accountId',
+    placeholder:  '',
+    value:        settings.accountId,
+}) }}
+
 {% set lists = [] %}
 
 {% for list in craft.emailSubscriptions.lists(true) %}

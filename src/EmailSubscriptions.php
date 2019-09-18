@@ -56,6 +56,7 @@ class EmailSubscriptions extends Plugin
 		'MailChimp' => 'MailChimp',
 		'HubSpot' => 'HubSpot',
 		'Klaviyo' => 'Klaviyo',
+		'ActiveCampaign' => 'ActiveCampaign',
 	];
 
     // Public Methods

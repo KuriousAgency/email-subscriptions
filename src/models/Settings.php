@@ -30,6 +30,7 @@ class Settings extends Model
      */
 	public $service = null;
 	public $apiKey = null;
+	public $accountId = null;
     public $defaultListId = null;
     public $selectedSubLists = null;
 	//public $terms = null;
