@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.1.14 - 2020-03-27
+
+### Added
+
+-   Campaign Monitor Service
+
 ## 1.1.6 - 2019-04-26
 
 ### Fixed
