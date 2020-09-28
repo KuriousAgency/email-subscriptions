@@ -74,13 +74,15 @@ class EmailSubscriptions extends Plugin
 
 		
 		Event::on(User::class, User::EVENT_AFTER_SAVE, function(Event $e){
-			$user = $e->sender;
-			$lists = Craft::$app->getRequest()->getParam('lists', []);
-			
-			if (count($lists)) {
-				$this->service->update($user->email, $lists);
-			}
-		});
+            $user = $e->sender;
+            if (Craft::$app->getRequest()->getIsSiteRequest()) {
+                $lists = Craft::$app->getRequest()->getParam('lists', []);
+                
+                if (count($lists)) {
+                    $this->service->update($user->email, $lists);
+                }
+            }
+        });
 
         Event::on(
             CraftVariable::class,
