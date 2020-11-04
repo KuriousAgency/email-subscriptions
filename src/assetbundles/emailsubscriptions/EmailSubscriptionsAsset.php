@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2018 Kurious Agency
  */
 
-namespace kuriousagency\emailsubscriptions\assetbundles\EmailSubscriptions;
+namespace kuriousagency\emailsubscriptions\assetbundles\emailsubscriptions;
 
 use Craft;
 use craft\web\AssetBundle;
