@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.1.17 - 2021-04-23
+### Fixed
+- Klaviyo integration - consent property fix
+
 ## 1.1.16 - 2020-11-04
 ### Fixed
 - Composer 2 compatability

@@ -79,7 +79,7 @@ class Klaviyo extends Component
 			$params = [
 				'profiles' => [
 					'email' => $email,
-					'consent' => 'web',
+					'$consent' => 'email',
 				]
 			];
 
