@@ -134,7 +134,9 @@ class HubSpot extends Component
     {
         $settings = EmailSubscriptions::$plugin->getSettings();
 
-        $params['hapikey'] = $settings->apiKey;
+		$apiKey = Craft::parseEnv($settings->apiKey);
+
+        $params['hapikey'] = $apiKey;
 
         $client = new \GuzzleHttp\Client([
           'base_uri' => 'https://api.hubapi.com/contacts/v1/',
@@ -150,7 +152,7 @@ class HubSpot extends Component
 				]);
 			}else{
 				$response = $client->request($type, $uri, [
-					'query' => ['hapikey' => $settings->apiKey],
+					'query' => ['hapikey' => $apiKey],
 					'json' => $params
 				]);
 			}

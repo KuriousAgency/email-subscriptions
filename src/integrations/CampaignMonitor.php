@@ -33,7 +33,7 @@ class CampaignMonitor extends Component
 	public function init()
 	{
 		$settings = EmailSubscriptions::$plugin->getSettings();
-		$this->_apiKey = $settings->apiKey;
+		$this->_apiKey = Craft::parseEnv($settings->apiKey);
 		$this->_clientId = $settings->accountId;
 	}
 	

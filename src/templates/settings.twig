@@ -28,8 +28,7 @@
     value: settings.service})
 }}
 
-
-{{ forms.textField({
+{{ forms.autoSuggestField({
     required:     true,
     label:        'API Key',
     instructions: '',
@@ -37,15 +36,17 @@
     name:         'apiKey',
     placeholder:  '',
     value:        settings.apiKey,
+    suggestEnvVars: true,
 }) }}
 
-{{ forms.textField({
+{{ forms.autoSuggestField({
     label:        'Account ID/Client ID',
     instructions: 'Account ID for ActiveCampaign and Client ID Campagin Monitor',
     id:           'accountId',
     name:         'accountId',
     placeholder:  '',
     value:        settings.accountId,
+    suggestEnvVars: true,
 }) }}
 
 {% set lists = [] %}

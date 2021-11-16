@@ -117,7 +117,9 @@ class Klaviyo extends Component
     {
         $settings = EmailSubscriptions::$plugin->getSettings();
 
-        $params['api_key'] = $settings->apiKey;
+		$apiKey = Craft::parseEnv($settings->apiKey);
+
+        $params['api_key'] = $apiKey;
 
         $client = new \GuzzleHttp\Client([
           'base_uri' => 'https://a.klaviyo.com/api/v2/',
@@ -129,12 +131,12 @@ class Klaviyo extends Component
 
 			if($type == 'GET'){
 				$response = $client->request($type, $uri, [
-					'query' => ['api_key' => $settings->apiKey],
+					'query' => ['api_key' => $apiKey],
 					'json' => $params
 				]);
 			}else{
 				$response = $client->request($type, $uri, [
-					'query' => ['api_key' => $settings->apiKey],
+					'query' => ['api_key' => $apiKey],
 					'json' => $params
 				]);
 			}

@@ -119,10 +119,10 @@ class ActiveCampaign extends Component
 		$settings = EmailSubscriptions::$plugin->getSettings();
 
         $client = new \GuzzleHttp\Client([
-          'base_uri' => 'https://'.$settings->accountId.'.api-us1.com/api/3/',
+          'base_uri' => 'https://'.Craft::parseEnv($settings->accountId).'.api-us1.com/api/3/',
           'http_errors' => false,
 		  'timeout' => 60,
-		  'headers' => ['Api-Token' => $settings->apiKey]
+		  'headers' => ['Api-Token' => Craft::parseEnv($settings->apiKey)]
         ]);
 
         try {
