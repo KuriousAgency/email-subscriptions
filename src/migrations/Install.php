@@ -64,11 +64,7 @@ class Install extends Migration
 
     // Protected Methods
     // =========================================================================
-
-    /**
-     * @return bool
-     */
-    protected function createTables()
+    protected function createTables(): bool
     {
         $tablesCreated = false;
 
@@ -100,11 +96,7 @@ class Install extends Migration
     protected function createIndexes()
     {
         $this->createIndex(
-            $this->db->getIndexName(
-                '{{%emailsubscriptions}}',
-                'email',
-                true
-            ),
+            $this->db->getIndexName(),
             '{{%emailsubscriptions}}',
             'email',
             true
@@ -112,7 +104,6 @@ class Install extends Migration
         // Additional commands depending on the db driver
         switch ($this->driver) {
             case DbConfig::DRIVER_MYSQL:
-                break;
             case DbConfig::DRIVER_PGSQL:
                 break;
         }
@@ -124,7 +115,7 @@ class Install extends Migration
     protected function addForeignKeys()
     {
         $this->addForeignKey(
-            $this->db->getForeignKeyName('{{%emailsubscriptions}}', 'siteId'),
+            $this->db->getForeignKeyName(),
             '{{%emailsubscriptions}}',
             'siteId',
             '{{%sites}}',

@@ -23,12 +23,14 @@ use craft\base\Component;
 class HubSpot extends Component
 {
     // Public Methods
-    // =========================================================================
-
-    /*
-     * @return mixed
-     */
-	public function getLists($offset=0)
+ // =========================================================================
+ /*
+  * @return mixed
+  */
+ /**
+  * @return mixed[]
+  */
+ public function getLists($offset=0): array
 	{
 		$results = [];
 		$data = $this->request('GET', 'lists', ['offset'=>$offset,'count'=>100])['body'];
@@ -43,32 +45,31 @@ class HubSpot extends Component
 					];
 				}
 			}
-			if ($data['has-more']) {
-				if ($data['offset'] < 21) {
-					$results = array_merge($results, $this->getLists($data['offset']));
-				}
+
+			if ($data['has-more'] && $data['offset'] < 21) {
+				$results = array_merge($results, $this->getLists($data['offset']));
 			}
 		}	
 		
 		return $results;
 	}
 
-	public function getListsByEmail($email)
+	public function getListsByEmail(string $email)
 	{
-		$results = [];
 		//$email = 'testingapis@hubspot.com';
-		
+
 		$contact = $this->request('GET', 'contact/email/'.$email.'/profile')['body'];
 		if (isset($contact['status']) && $contact['status'] == 'error') {
 			return [];
 		}
+
 		//Craft::dd($contact);
 		$ids = [];
 		foreach ($contact['list-memberships'] as $list)
 		{
 			$ids[] = $list['static-list-id'];
 		}
-		
+
 		$lists = $this->getLists();
 
 		foreach($lists as $key => $list)
@@ -97,18 +98,18 @@ class HubSpot extends Component
 			'emails' => [$email],
 		];
 
-		$response = $this->request('POST', "lists/$listId/add", $params);
+		$response = $this->request('POST', sprintf('lists/%s/add', $listId), $params);
 
-		if ($response['success'] and $response['statusCode'] === 200) {
+		if ($response['success'] && $response['statusCode'] === 200) {
 			return ['status' => 'success'];
-		} elseif ($response['success'] and $response['statusCode'] !== 200) {
+		} elseif ($response['success'] && $response['statusCode'] !== 200) {
 			return ['status' => 'error', 'message' => $response['statusCode'].' '.$response['reason']];
 		}else{
 			return ['status' => 'error', 'message' => $response['reason']];
 		}
 	}
 
-	public function unsubscribe($listId, $email)
+	public function unsubscribe($listId, string $email)
 	{
 		$contact = $this->request('GET', 'contact/email/'.$email.'/profile')['body'];
 		if (isset($contact['status']) && $contact['status'] == 'error') {
@@ -119,18 +120,18 @@ class HubSpot extends Component
 			'vids' => [$contact['vid']],
 		];
 
-		$response = $this->request('POST', "lists/$listId/remove/", $params);
+		$response = $this->request('POST', sprintf('lists/%s/remove/', $listId), $params);
 
-		if ($response['success'] and $response['statusCode'] === 200) {
+		if ($response['success'] && $response['statusCode'] === 200) {
 			return ['status' => 'success'];
-		} elseif ($response['success'] and $response['statusCode'] !== 200) {
+		} elseif ($response['success'] && $response['statusCode'] !== 200) {
 			return ['status' => 'error', 'message' => $response['statusCode'].' '.$response['reason']];
 		}else{
 			return ['status' => 'error', 'message' => $response['reason']];
 		}
 	}
 
-	private function request($type = 'GET', $uri = '', $params = [])
+	private function request(string $type = 'GET', string $uri = '', array $params = [])
     {
         $settings = EmailSubscriptions::$plugin->getSettings();
 
@@ -161,14 +162,14 @@ class HubSpot extends Component
             'success' => true,
             'statusCode' => $response->getStatuscode(),
             'reason' => $response->getReasonPhrase(),
-            'body' => json_decode($response->getBody(), true)
+            'body' => json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR)
           ];
 
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
 
           return [
             'success' => false,
-            'reason' => $e->getMessage()
+            'reason' => $exception->getMessage()
           ];
 
         }

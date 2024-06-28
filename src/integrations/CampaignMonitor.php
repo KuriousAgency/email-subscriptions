@@ -22,33 +22,37 @@ use craft\base\Component;
  */
 class CampaignMonitor extends Component
 {
-	
+
 	private $_apiKey;
+
 	private $_clientId;
-	
+
 	// Public Methods
 	// =========================================================================
-	
 
-	public function init()
+
+	public function init(): void
 	{
 		$settings = EmailSubscriptions::$plugin->getSettings();
 		$this->_apiKey = Craft::parseEnv($settings->apiKey);
 		$this->_clientId = $settings->accountId;
 	}
-	
+
 
     /*
-     * @return mixed
-     */
-	public function getLists()
+  * @return mixed
+  */
+ /**
+  * @return array<mixed, array<'id'|'name', mixed>>
+  */
+ public function getLists(): array
 	{
-		
+
 		$results = [];
 		$response = $this->request('GET', 'clients/'.$this->_clientId.'/lists');
-		
+
 		if ($response['success'] && $response['statusCode'] === 200) {
-		
+
 			foreach ($response['body'] as $list)
 			{
 				$results[] = [
@@ -61,7 +65,10 @@ class CampaignMonitor extends Component
 		return $results;
 	}
 
-	public function getListsByEmail($email)
+	/**
+  * @return array<mixed, array<'id'|'name', mixed>>
+  */
+ public function getListsByEmail($email): array
 	{
 		$results = [];
 
@@ -74,12 +81,13 @@ class CampaignMonitor extends Component
 				];
 			}
 		}
+
 		return $results;
 	}
 
-	public function subscribe($listId, $email)
+	public function subscribe(string $listId, $email)
 	{
-		
+
 		$subscribers[] = [
 			'EmailAddress' => $email,
 			'ConsentToTrack' => 'Yes'
@@ -107,23 +115,22 @@ class CampaignMonitor extends Component
 			'EmailAddress' => $email,
 		];
 
-		$response = $this->request('POST', "subscribers/$listId/unsubscribe", $params);
+		$response = $this->request('POST', sprintf('subscribers/%s/unsubscribe', $listId), $params);
 
 		if($response['success'] && $response['statusCode'] === 200) {
 			return ['status' => 'success'];
 		} elseif ($response['success'] && $response['statusCode'] !== 200) {
-			if(array_key_exists('Code',$response['body'])) {
-				if($response['body']['Code'] == 203) {
-					return ['status' => 'success'];
-				}
+			if(array_key_exists('Code', $response['body']) && $response['body']['Code'] == 203) {
+				return ['status' => 'success'];
 			}
+
 			return ['status' => 'error', 'message' => $response['statusCode'].' '.$response['reason']];
 		} else{
 			return ['status' => 'error', 'message' => $response['reason']];
 		}
 	}
 
-	private function request($type = 'GET', $uri = '', $params = null)
+	private function request(string $type = 'GET', string $uri = '', $params = null)
     {
 
         $client = new \GuzzleHttp\Client([
@@ -132,7 +139,7 @@ class CampaignMonitor extends Component
           'timeout' => 10,
           'auth' => [$this->_apiKey,'']
 		]);
-		
+
 		$uri .= '.json';
 
         try {
@@ -151,14 +158,14 @@ class CampaignMonitor extends Component
             'success' => true,
             'statusCode' => $response->getStatuscode(),
             'reason' => $response->getReasonPhrase(),
-            'body' => json_decode($response->getBody(), true)
+            'body' => json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR)
           ];
 
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
 
           return [
             'success' => false,
-            'reason' => $e->getMessage()
+            'reason' => $exception->getMessage()
           ];
 
         }

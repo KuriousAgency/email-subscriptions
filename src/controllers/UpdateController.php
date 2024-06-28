@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Email Subscriptions plugin for Craft CMS 3.x
  *
@@ -32,7 +33,7 @@ class UpdateController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    protected $allowAnonymous = ['index'];
+    protected array|int|bool $allowAnonymous = ['index'];
 
     // Public Methods
     // =========================================================================
@@ -40,21 +41,20 @@ class UpdateController extends Controller
     /**
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex(): \yii\web\Response
     {
         $this->requirePostRequest();
-		$request = Craft::$app->getRequest();
+        $request = Craft::$app->getRequest();
 
-		$email = Craft::$app->getUser()->getIdentity()->email;
-		
-		$listIds = $request->getBodyParam('lists', []);// ? Craft::$app->security->validateData($request->post('lists')) : [];
+        $email = Craft::$app->getUser()->getIdentity()->email;
 
-		if (EmailSubscriptions::$plugin->service->update($email, $listIds)) {
-			Craft::$app->session->setFlash('notice', 'Subscriptions updated.');
-		}
-		
+        $listIds = $request->getBodyParam('lists', []); // ? Craft::$app->security->validateData($request->post('lists')) : [];
 
-		return $this->redirectToPostedUrl();
+        if (EmailSubscriptions::$plugin->service->update($email, $listIds)) {
+            Craft::$app->session->setFlash('notice', 'Subscriptions updated.');
+        }
+
+
+        return $this->redirectToPostedUrl();
     }
-
 }

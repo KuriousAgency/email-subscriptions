@@ -38,8 +38,9 @@ class EmailSubscriptionsVariable
 		if(!$email){
 			$email = Craft::$app->getUser()->getIdentity()->email;
 		}
+
 		//Craft::dd($email);
-		
+
 		return EmailSubscriptions::$plugin->service->getListsByEmail($email);
 	}
 

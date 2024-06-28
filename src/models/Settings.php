@@ -28,16 +28,21 @@ class Settings extends Model
     /**
      * @var string
      */
-	public $service = null;
-	public $apiKey = null;
-	public $accountId = null;
-    public $defaultListId = null;
-    public $selectedSubLists = null;
+	public $service;
+
+	public $apiKey;
+
+	public $accountId;
+
+    public $defaultListId;
+
+    public $selectedSubLists;
+
 	//public $terms = null;
 
     // Public Methods
 	// =========================================================================
-	
+
 	public function getServices()
 	{
 		return EmailSubscriptions::$plugin->services;
@@ -46,7 +51,7 @@ class Settings extends Model
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['service','apiKey'], 'string'],

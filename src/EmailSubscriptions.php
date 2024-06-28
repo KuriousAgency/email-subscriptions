@@ -45,12 +45,8 @@ class EmailSubscriptions extends Plugin
     public static $plugin;
 
     // Public Properties
-    // =========================================================================
-
-    /**
-     * @var string
-     */
-	public $schemaVersion = '0.0.1';
+ // =========================================================================
+ public string $schemaVersion = '0.0.1';
 	
 	public $services = [
 		'MailChimp' => 'MailChimp',
@@ -66,14 +62,14 @@ class EmailSubscriptions extends Plugin
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         self::$plugin = $this;
 
 
 		
-		Event::on(User::class, User::EVENT_AFTER_SAVE, function(Event $e){
+		Event::on(User::class, User::EVENT_AFTER_SAVE, function(Event $e): void{
             $user = $e->sender;
             if (Craft::$app->getRequest()->getIsSiteRequest()) {
                 $lists = Craft::$app->getRequest()->getParam('lists', []);
@@ -87,7 +83,7 @@ class EmailSubscriptions extends Plugin
         Event::on(
             CraftVariable::class,
             CraftVariable::EVENT_INIT,
-            function (Event $event) {
+            static function (Event $event) : void {
                 /** @var CraftVariable $variable */
                 $variable = $event->sender;
                 $variable->set('emailSubscriptions', EmailSubscriptionsVariable::class);
@@ -97,9 +93,7 @@ class EmailSubscriptions extends Plugin
         Event::on(
             Plugins::class,
             Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
-                if ($event->plugin === $this) {
-                }
+            static function (PluginEvent $event) : void {
             }
 		);
 		
@@ -123,7 +117,7 @@ class EmailSubscriptions extends Plugin
     /**
      * @inheritdoc
      */
-    protected function createSettingsModel()
+    protected function createSettingsModel(): ?\craft\base\Model
     {
         return new Settings();
     }

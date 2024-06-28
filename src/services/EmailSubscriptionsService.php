@@ -26,9 +26,9 @@ class EmailSubscriptionsService extends Component
 {
     // Public Methods
 	// =========================================================================
-	public $service = null;
+	public $service;
 
-	public function init()
+	public function init(): void
 	{
 		parent::init();
 
@@ -39,7 +39,7 @@ class EmailSubscriptionsService extends Component
 		}
 	}
 
-	public function update($email, $ids)
+	public function update($email, $ids): bool
 	{
 		$availableLists = $this->getLists();
 		$availableListsIds = [];
@@ -52,11 +52,7 @@ class EmailSubscriptionsService extends Component
 
 		foreach($availableListsIds as $id)
 		{
-			if(in_array($id, $ids)){
-				$responses[] = $this->subscribe($id, $email);
-			}else{
-				$responses[] = $this->unsubscribe($id, $email);
-			}
+			$responses[] = in_array($id, $ids) ? $this->subscribe($id, $email) : $this->unsubscribe($id, $email);
 		}
 
 		$success = true;
@@ -80,10 +76,11 @@ class EmailSubscriptionsService extends Component
 		if (!$this->service) {
 			return [];
 		}
+
 		$toShow = [];
 		$settings = EmailSubscriptions::$plugin->getSettings();
 		$selectedSubLists = str_replace( '_', '',$settings->selectedSubLists);
-		
+
 		if ($showAll) {
 			return $this->service->getLists();
 		} elseif (empty($selectedSubLists)) {
@@ -93,7 +90,8 @@ class EmailSubscriptionsService extends Component
 				if (in_array($list['id'],$selectedSubLists)) {
 					$toShow[] = $list;
 				} 
-			};
+			}
+   ;
 			if ($user = Craft::$app->getUser()->getIdentity()) {
 				foreach ($this->getListsByEmail($user->email) as $list) {
 					if (!in_array($list['id'],$selectedSubLists)) {
@@ -101,6 +99,7 @@ class EmailSubscriptionsService extends Component
 					} 
 				};
 			}
+
 			return $toShow;
 		}
 		
@@ -111,6 +110,7 @@ class EmailSubscriptionsService extends Component
 		if (!$this->service) {
 			return [];
 		}
+
 		return $this->service->getListsByEmail($email);
 	}
 

@@ -23,12 +23,14 @@ use craft\base\Component;
 class MailChimp extends Component
 {
     // Public Methods
-    // =========================================================================
-
-    /*
-     * @return mixed
-     */
-	public function getLists()
+ // =========================================================================
+ /*
+  * @return mixed
+  */
+ /**
+  * @return array<mixed, array<'id'|'name', mixed>>
+  */
+ public function getLists(): array
 	{
 		$results = [];
 		foreach ($this->request('GET', 'lists')['body']['lists'] as $list)
@@ -38,10 +40,14 @@ class MailChimp extends Component
 				'name' => $list['name'],
 			];
 		}
+
 		return $results;
 	}
 
-	public function getListsByEmail($email)
+	/**
+  * @return array<mixed, array<'id'|'name', mixed>>
+  */
+ public function getListsByEmail($email): array
 	{
 		$results = [];
 		foreach ($this->request('GET', 'lists', ['email'=>$email])['body']['lists'] as $list)
@@ -51,6 +57,7 @@ class MailChimp extends Component
 				'name' => $list['name'],
 			];
 		}
+
 		return $results;
 	}
 
@@ -63,11 +70,11 @@ class MailChimp extends Component
 
 		$hash = md5($email);
 
-		$response = $this->request('PUT', "lists/$listId/members/$hash", $params);
+		$response = $this->request('PUT', sprintf('lists/%s/members/%s', $listId, $hash), $params);
 
-		if ($response['success'] and $response['statusCode'] === 200) {
+		if ($response['success'] && $response['statusCode'] === 200) {
 			return ['status' => 'success'];
-		} elseif ($response['success'] and $response['statusCode'] !== 200) {
+		} elseif ($response['success'] && $response['statusCode'] !== 200) {
 			return ['status' => 'error', 'message' => $response['statusCode'].' '.$response['reason']];
 		}else{
 			return ['status' => 'error', 'message' => $response['reason']];
@@ -83,18 +90,18 @@ class MailChimp extends Component
 
 		$hash = md5($email);
 
-		$response = $this->request('PUT', "lists/$listId/members/$hash", $params);
+		$response = $this->request('PUT', sprintf('lists/%s/members/%s', $listId, $hash), $params);
 
-		if ($response['success'] and $response['statusCode'] === 200) {
+		if ($response['success'] && $response['statusCode'] === 200) {
 			return ['status' => 'success'];
-		} elseif ($response['success'] and $response['statusCode'] !== 200) {
+		} elseif ($response['success'] && $response['statusCode'] !== 200) {
 			return ['status' => 'error', 'message' => $response['statusCode'].' '.$response['reason']];
 		}else{
 			return ['status' => 'error', 'message' => $response['reason']];
 		}
 	}
 
-	private function request($type = 'GET', $uri = '', $params = null)
+	private function request(string $type = 'GET', string $uri = '', $params = null): array
     {
         $settings = EmailSubscriptions::$plugin->getSettings();
 
@@ -125,14 +132,14 @@ class MailChimp extends Component
             'success' => true,
             'statusCode' => $response->getStatuscode(),
             'reason' => $response->getReasonPhrase(),
-            'body' => json_decode($response->getBody(), true)
+            'body' => json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR)
           ];
 
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
 
           return [
             'success' => false,
-            'reason' => $e->getMessage()
+            'reason' => $exception->getMessage()
           ];
 
         }

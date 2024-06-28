@@ -29,8 +29,11 @@ class EmailSubscriptionsModel extends Model
      * @var string
      */
 	public $email;
+
 	public $listId;
+
 	public $terms;
+
 	public $action;
 
     // Public Methods
@@ -39,7 +42,7 @@ class EmailSubscriptionsModel extends Model
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
 			['email', 'string'],
