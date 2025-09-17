@@ -54,7 +54,10 @@ class HubSpot extends Component
 		return $results;
 	}
 
-	public function getListsByEmail(string $email)
+	/**
+  * @return mixed[]
+  */
+ public function getListsByEmail(string $email): array
 	{
 		//$email = 'testingapis@hubspot.com';
 
@@ -82,7 +85,7 @@ class HubSpot extends Component
 		return $lists;
 	}
 
-	public function subscribe($listId, $email)
+	public function subscribe($listId, $email): array
 	{
 		//$email = 'testingapis@hubspot.com';
 
@@ -109,7 +112,7 @@ class HubSpot extends Component
 		}
 	}
 
-	public function unsubscribe($listId, string $email)
+	public function unsubscribe($listId, string $email): array
 	{
 		$contact = $this->request('GET', 'contact/email/'.$email.'/profile')['body'];
 		if (isset($contact['status']) && $contact['status'] == 'error') {
@@ -131,7 +134,7 @@ class HubSpot extends Component
 		}
 	}
 
-	private function request(string $type = 'GET', string $uri = '', array $params = [])
+	private function request(string $type = 'GET', string $uri = '', array $params = []): array
     {
         $settings = EmailSubscriptions::$plugin->getSettings();
 

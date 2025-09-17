@@ -85,7 +85,7 @@ class CampaignMonitor extends Component
 		return $results;
 	}
 
-	public function subscribe(string $listId, $email)
+	public function subscribe(string $listId, $email): array
 	{
 
 		$subscribers[] = [
@@ -109,7 +109,7 @@ class CampaignMonitor extends Component
 		}
 	}
 
-	public function unsubscribe($listId, $email)
+	public function unsubscribe($listId, $email): array
 	{
 		$params = [
 			'EmailAddress' => $email,
@@ -130,7 +130,7 @@ class CampaignMonitor extends Component
 		}
 	}
 
-	private function request(string $type = 'GET', string $uri = '', $params = null)
+	private function request(string $type = 'GET', string $uri = '', $params = null): array
     {
 
         $client = new \GuzzleHttp\Client([
@@ -144,7 +144,7 @@ class CampaignMonitor extends Component
 
         try {
 
-			if($type == 'GET'){
+			if($type === 'GET'){
 				$response = $client->request($type, $uri, [
 					'query' => $params
 				]);

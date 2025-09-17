@@ -30,14 +30,9 @@ use function SSNepenthe\ColorUtils\red;
 class Klaviyo extends Component
 {
 	// Public Methods
-	// =========================================================================
-	/*
-  * @return mixed
-  */
-	/**
-	 * @return array
-	 */
-	public function getLists($offset = 0): array
+ 	// =========================================================================
+
+ 	public function getLists($offset = 0): array
 	{
 		$results = [];
 
@@ -58,9 +53,6 @@ class Klaviyo extends Component
 		return $results;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function getListsByEmail($email): array
 	{
 		$lists = [];
@@ -86,7 +78,7 @@ class Klaviyo extends Component
 		return $lists;
 	}
 
-	public function subscribe($listId, $email)
+	public function subscribe($listId, $email): array
 	{
 		$params = [
 			"data" => [
@@ -137,7 +129,7 @@ class Klaviyo extends Component
 		}
 	}
 
-	public function unsubscribe($listId, $email)
+	public function unsubscribe(string $listId, $email): false|array
 	{
 		$profileId = $this->getProfileIdByEmail($email);
 
@@ -165,7 +157,7 @@ class Klaviyo extends Component
 		}
 	}
 
-	public function getProfileIdByEmail($email)
+	public function getProfileIdByEmail(string $email)
 	{
 		$params = [
 			'filter' => 'equals(email,"' . $email . '")',
@@ -174,12 +166,10 @@ class Klaviyo extends Component
 		$uri = 'profiles';
 		$response = $this->request('GET', $uri, ['query' => $params])['body'];
 
-		$profileId = isset($response['data']['id']) ? $response['data']['id'] : null;
-
-		return $profileId;
+		return $response['data']['id'] ?? null;
 	}
 
-	private function request(string $method = 'GET', string $uri = '', array $params = [])
+	private function request(string $method = 'GET', string $uri = '', array $params = []): array
 	{
 		$settings = EmailSubscriptions::$plugin->getSettings();
 

@@ -61,14 +61,14 @@ class MailChimp extends Component
 		return $results;
 	}
 
-	public function subscribe($listId, $email)
+	public function subscribe($listId, $email): array
 	{
 		$params = [
 			'email_address' => $email,
 			'status' => 'subscribed',
 		];
 
-		$hash = md5($email);
+		$hash = md5((string) $email);
 
 		$response = $this->request('PUT', sprintf('lists/%s/members/%s', $listId, $hash), $params);
 
@@ -81,14 +81,14 @@ class MailChimp extends Component
 		}
 	}
 
-	public function unsubscribe($listId, $email)
+	public function unsubscribe($listId, $email): array
 	{
 		$params = [
 			'email_address' => $email,
 			'status' => 'unsubscribed',
 		];
 
-		$hash = md5($email);
+		$hash = md5((string) $email);
 
 		$response = $this->request('PUT', sprintf('lists/%s/members/%s', $listId, $hash), $params);
 

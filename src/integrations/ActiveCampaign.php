@@ -72,7 +72,7 @@ class ActiveCampaign extends Component
 		return $results;
 	}
 
-	public function subscribe($listId, $email)
+	public function subscribe($listId, $email): array
 	{
 
 		// find existing contact or create a new one
@@ -99,7 +99,7 @@ class ActiveCampaign extends Component
 		}
 	}
 
-	public function unsubscribe($listId, $email)
+	public function unsubscribe($listId, $email): array
 	{
 		$contactId = $this->_getContactIdByEmail($email);
 		
@@ -120,7 +120,7 @@ class ActiveCampaign extends Component
 		}
 	}
 
-	private function request(string $type = 'GET', string $uri = '', $params = null)
+	private function request(string $type = 'GET', string $uri = '', $params = null): array
     {
 		$settings = EmailSubscriptions::$plugin->getSettings();
 

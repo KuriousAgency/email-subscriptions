@@ -37,10 +37,6 @@ class UpdateController extends Controller
 
     // Public Methods
     // =========================================================================
-
-    /**
-     * @return mixed
-     */
     public function actionIndex(): \yii\web\Response
     {
         $this->requirePostRequest();
